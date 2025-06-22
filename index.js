@@ -32,7 +32,7 @@ app.post('/students', async (req, res) => {
   }
 });
 
-// get /students --> return all the students
+// get all the students
 app.get('/students', async (req, res) => {
   try {
     const students = await pool.query('SELECT * FROM students');
@@ -42,7 +42,7 @@ app.get('/students', async (req, res) => {
   }
 });
 
-// get students/:id --> return a specific book
+// get  a specific student data
 app.get('/students/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -55,11 +55,14 @@ app.get('/students/:id', async (req, res) => {
   }
 });
 
-// get students/:id --> return a specific book
+// delete a specific student
 app.delete('/students/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    res.status(200).json({ message: 'get specific students' + 'book id ' + id });
+
+    const result = await pool.query('DELETE FROM students WHERE student_id = $1 RETURNING *', [id]);
+
+    res.status(200).json({ message: 'Student deleted successfully', student: result.rows[0] });
   } catch (error) {
     throw new Error(error);
   }
