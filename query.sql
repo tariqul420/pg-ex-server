@@ -3,3 +3,7 @@ INSERT INTO students(first_name, last_name, date_of_birth, email, phone_number) 
 SELECT * FROM students;
 
 SELECT * FROM students WHERE student_id = $1;
+
+DELETE FROM students WHERE student_id = $1;
+
+UPDATE students SET first_name = $1, last_name = $2, date_of_birth = $3, email = $4, phone_number = $5 WHERE student_id = $6 RETURNING *, [... fields];

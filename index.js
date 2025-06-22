@@ -71,11 +71,22 @@ app.delete('/students/:id', async (req, res) => {
 app.put('/students/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, description } = req.body;
-    if (!title || !description) {
-      return res.status(400).json({ message: 'Title and description are required' });
+    const { first_name, last_name, date_of_birth, email, phone_number } = req.body;
+
+    if (!first_name || !last_name || !email) {
+      return res.status(400).json({ message: 'first_name, last_name, and email are required' });
     }
-    res.status(200).json({ message: 'Book updated successfully', book: { id, title, description } });
+
+    const result = await pool.query('UPDATE students SET first_name = $1, last_name = $2, date_of_birth = $3, email = $4, phone_number = $5 WHERE student_id = $6 RETURNING *', [
+      first_name,
+      last_name,
+      date_of_birth,
+      email,
+      phone_number,
+      id,
+    ]);
+
+    res.status(200).json({ message: 'Student updated successfully', student: result.rows });
   } catch (error) {
     throw new Error(error);
   }
