@@ -46,7 +46,10 @@ app.get('/students', async (req, res) => {
 app.get('/students/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    res.status(200).json({ message: 'get specific students' + 'book id ' + id });
+
+    const student = await pool.query('SELECT * FROM students WHERE student_id = $1', [id]);
+
+    res.status(200).json({ student: student.rows[0] });
   } catch (error) {
     throw new Error(error);
   }
